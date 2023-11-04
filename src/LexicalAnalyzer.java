@@ -53,16 +53,16 @@ public class LexicalAnalyzer {
     private static final int QUESTION_MARK = 41;
     private static final int COLON = 42;
 
-    public static void main(String[] args) {
+    public static void readFile(String s) {
         /* Open the input data file and process its contents */
         try {
-            in_fp = new BufferedReader(new FileReader("front.in"));
+            in_fp = new BufferedReader(new FileReader(s));
             getChar();
             do {
                 lex();
             } while (nextToken != EOF);
         } catch (IOException e) {
-            System.err.println("ERROR - cannot open front.in");
+            System.err.println("ERROR - cannot open "+s);
         }
 
 //        for (Integer token : tokenStack) {    //for test only
@@ -258,6 +258,17 @@ public class LexicalAnalyzer {
         }
     }
 
+    public Stack gettokenStack(){ //return the saved token stack
+
+        Stack resultTokenStack = new Stack();
+
+        while (!tokenStack.isEmpty()){
+            resultTokenStack.push(tokenStack.pop());
+        }
+
+        return resultTokenStack;
+    }
+
     /* lex - a simple lexical analyzer for arithmetic expressions */
     private static void lex() throws IOException {
         lexLen = 0;
@@ -335,7 +346,7 @@ public class LexicalAnalyzer {
                 break;
         }
 
-        tokenStack.push(nextToken);                            //new added
+        tokenStack.push(nextToken); //push tokens into stack(int)
 
         /* End of switch */
         System.out.printf("Next token is: %d, Next lexeme is %s", nextToken, lexeme);

@@ -1,5 +1,15 @@
+
+
 public class Main {
+
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+
+        LexicalAnalyzer lex = new LexicalAnalyzer();
+
+        lex.readFile("input5.txt");
+
+        SyntaxAnalyzer syn = new SyntaxAnalyzer(lex.gettokenStack());
+
+        System.out.println(syn.analyze());
     }
 }
