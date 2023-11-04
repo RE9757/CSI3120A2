@@ -9,6 +9,8 @@ public class LexicalAnalyzer {
     private static int charClass;
     private static StringBuilder lexeme = new StringBuilder(100);
     private static StringBuilder error = new StringBuilder(100);
+
+
     private static char nextChar;
     private static int lexLen;
     private static int token;
@@ -52,6 +54,10 @@ public class LexicalAnalyzer {
     private static final int COMMENT = 40;
     private static final int QUESTION_MARK = 41;
     private static final int COLON = 42;
+
+    private static final int BLOCK_COMMENT = 43;//new added for block comment
+
+    private static int unclosedStringLiteral = 44;//used to make sure whether unclosed String literal happens
 
     public static void readFile(String s) {
         /* Open the input data file and process its contents */
@@ -104,7 +110,10 @@ public class LexicalAnalyzer {
             case '/':
                 addChar();
                 getChar();
-                nextToken = isComment() ? COMMENT : DIV_OP;
+                //nextToken = isComment() ? COMMENT : DIV_OP;
+                if(!isComment()){
+                    nextToken = DIV_OP;
+                }
                 break;
             case '=':
                 addChar();
@@ -182,6 +191,10 @@ public class LexicalAnalyzer {
                 addChar();
                 getChar();
                 while (nextChar != '\"') {
+                    if(nextChar == '\n'){//break dead loop
+                        tokenStack.push(unclosedStringLiteral);
+                        break;
+                    }
                     addChar();
                     getChar();
                 }
@@ -211,7 +224,7 @@ public class LexicalAnalyzer {
                 getChar();
             }
             getChar(); // Consume the '/'
-            nextToken = COMMENT;
+            nextToken = BLOCK_COMMENT;
             lexeme = new StringBuilder("a block comment");
         } else {
             return false;
@@ -349,7 +362,7 @@ public class LexicalAnalyzer {
         tokenStack.push(nextToken); //push tokens into stack(int)
 
         /* End of switch */
-        System.out.printf("Next token is: %d, Next lexeme is %s", nextToken, lexeme);
+        //System.out.printf("Next token is: %d, Next lexeme is %s", nextToken, lexeme);
         System.out.printf("\t%s\n", error);
     }
 }

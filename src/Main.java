@@ -6,7 +6,7 @@ public class Main {
 
         LexicalAnalyzer lex = new LexicalAnalyzer();
 
-        lex.readFile("input5.txt");
+        lex.readFile("input20.txt");
 
         SyntaxAnalyzer syn = new SyntaxAnalyzer(lex.gettokenStack());
 
